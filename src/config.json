@@ -2,8 +2,8 @@
 	"proxies": "socks4",
 	"thread": "200",
 	"webhook": {
-		"url": "Your Webhook",
-		"username": "Nitro Hits",
+		"url": "https://canary.discord.com/api/webhooks/1060468278822178916/ubzNQ27z7xKvp2r3tD89wDGCEFUtQjYJeXm2aiGQYuwuWrSLXtdjVSRIWdj4LtBUJemw",
+		"username": "Captain Hook",
 		"avatar": "https://cdn.discordapp.com/avatars/851905439809142856/6b09c26b7194e3aa7c84b7505a36a13e.webp?size=128"
 	}
 }

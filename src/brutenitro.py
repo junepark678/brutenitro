@@ -4,9 +4,9 @@ from webserver import keep_alive
 keep_alive()
 
 def printer(color, status, code) -> None:
-	threading.Lock().acquire()
-	print(f"{color} {status} > {Fore.RESET}discord.gift/{code}")
-	return
+    threading.Lock().acquire()
+    print(f"{color} {status} > {Fore.RESET}discord.gift/{code}")
+    return
 
 class Worker():              
     def pick_proxy(self):
@@ -17,7 +17,7 @@ class Worker():
 
     def config(self, args, extra=False):
         with open('config.json', 'r') as conf:
-			
+            
             data = json.load(conf)
         if extra:
             return data[args][extra]
@@ -25,27 +25,27 @@ class Worker():
             return data[args]
     
     def run(self):
-        self.code = "".join(random.choice("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890") for _ in range(16))
+        self.code = "".join(random.choice("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890") for _ in range(19))
         try:
             req = requests.get(
-				f'https://discordapp.com/api/v6/entitlements/gift-codes/{self.code}?with_application=false&with_subscription_plan=true', # API Endpoint to check if the nitro code is valid
-				proxies={
-					'http': self.config("proxies") + '://' + self.pick_proxy(),
-					'https': self.config("proxies") + '://' + self.pick_proxy()
-					}, 
-				timeout = 0.5 # Timeout time between each request, sometimes causes proccess to be killed if it is too low of a number.
-			)
+                f'https://discordapp.com/api/v6/entitlements/gift-codes/{self.code}?with_application=false&with_subscription_plan=true', # API Endpoint to check if the nitro code is valid
+                proxies={
+                    'http': self.config("proxies") + '://' + self.pick_proxy(),
+                    'https': self.config("proxies") + '://' + self.pick_proxy()
+                    }, 
+                timeout = 0.5 # Timeout time between each request, sometimes causes proccess to be killed if it is too low of a number.
+            )
             
             if req.status_code == 200:
                 printer(Fore.LIGHTGREEN_EX, " Valid ", self.code)
                 try:
                     requests.post(
-						Worker().config("webhook", "url"), 
-						json={
-							"content": f"Nitro Code, Redeem ASAP\n\nhttps://discord.gift/{self.code}",
-							"username": Worker().config("webhook", "username"),
-							"avatar_url": Worker().config("webhook", "avatar")
-						})
+                        Worker().config("webhook", "url"), 
+                        json={
+                            "content": f"Nitro Code, Redeem ASAP\n\nhttps://discord.gift/{self.code}",
+                            "username": Worker().config("webhook", "username"),
+                            "avatar_url": Worker().config("webhook", "avatar")
+                        })
                 except:
                     pass
             elif req.status_code == 429:
@@ -61,14 +61,24 @@ class Worker():
 
 
 if __name__ == "__main__": # Driver Code
-	print("""
-	                                  .-.
+    print("""
+                                      .-.
      (___________________________()6 `-,       BruteNitro | Nitro code brute forcing
      (   ______________________   /''"`
      //\\                      //\\
      "" ""                     "" ""
-	""")
-	DNG = Worker()
-	while True:
-		if threading.active_count() <= int(Worker().config("thread")):  
-			threading.Thread(target=DNG.run).start()
+    """)
+    DNG = Worker()
+    try:
+            requests.post(
+                Worker().config("webhook", "url"), 
+                         json={
+                                                        "content": f"Test",
+                                                        "username": Worker().config("webhook", "username"),
+                                                        "avatar_url": Worker().config("webhook", "avatar")
+                         })
+    except Exception as e:
+            print(e)
+    while True:
+        if threading.active_count() <= int(Worker().config("thread")):  
+            threading.Thread(target=DNG.run).start()
